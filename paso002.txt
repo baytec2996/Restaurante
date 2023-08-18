@@ -1,0 +1,2 @@
+entro en INSERT INTO tm_detalle_pedido(data 
+["4077","1","52","1","1","10.00","","2023-08-17 18:59:02","a"]aca sql->

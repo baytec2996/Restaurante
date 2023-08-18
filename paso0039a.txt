@@ -1,0 +1,2 @@
+entro en INSERT INTO tm_gastos_adm(data 
+["1","","44",4,"50","PEPSI","0","2022-08-26 11:44:42"]aca sql->

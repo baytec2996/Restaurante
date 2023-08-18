@@ -1,0 +1,2 @@
+entro en usp_configProductoPres( 
+[{":flag":1,":id_pres":0,":id_prod":"325",":cod_prod":"CHCHA0",":presentacion":"CHAUFA FAMILIAR CHANCHO",":descripcion":"",":precio":"34.00",":precio_delivery":"",":receta":"0",":stock_min":0,":stock_limit":0,":impuesto":"0",":delivery":"0",":margen":"0",":igv":0.18,":imagen":"default.png",":estado":"a"}]aca sql->
