@@ -251,7 +251,7 @@ $(function() {
                     html_confirm = '<div>Se creará el documento electrónico<br> con los siguientes datos</div>';
         
                     Swal.fire({
-                        title: 'Necesitamos de tu Confirmación==    >',
+                        title: 'Necesitamos de tu Confirmación',
                         html: html_confirm,
                         icon: 'warning',
                         showCancelButton: true,
@@ -285,9 +285,6 @@ $(function() {
                                 type: 'POST',
                                 url: $('#url').val()+'venta/RegistrarVenta',
                                 data: venta,
-                                beforeSend: function (){
-                                    console.log(venta);
-                                },
                                 success: function (dato) {
         
                                     cod_ven = dato.replace(/['"]+/g, '');
@@ -1662,6 +1659,8 @@ var printPdf = function(url,condicional) {
     }else{
         var Urlpdf = $("#url").val()+'informe/venta_all_imp/'+url;   
     }
+
+    console.log(Urlpdf);
   
     var iframe = document.createElement('iframe');
     iframe.className='pdfIframe'
@@ -1677,6 +1676,7 @@ var printPdf = function(url,condicional) {
     iframe.src = Urlpdf;
     URL.revokeObjectURL(Urlpdf)
 };
+
 var comision_delivery_factura = function(){
     var html_confirm = '<div>Se procederá a realizar una comisión por el servicio de delivery<br><br>\
     Ingrese monto</div>\

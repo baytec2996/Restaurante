@@ -162,19 +162,20 @@ class Venta extends Controller {
         if($_POST['id_pedido'] != '' && isset($_POST['idProd'])){
             
             //======= Mostrando Datos de la venta ===============
-            $file = fopen("Error.log.", "a+");
+            $file = fopen("Error.log", "a+");
             fwrite($file, '|------HORA---------------|----------DETALLE-----' . PHP_EOL);
             //fwrite($file, '['.date("Y-m-d H:i:s").'] '.json_encode($_POST) . PHP_EOL);
-            fwrite($file, '['.date("Y-m-d H:i:s").'] '.count($_POST['idProd']).  PHP_EOL);
-            fclose($file);
+            fwrite($file, '['.date("Y-m-d H:i:s").'] '.json_encode($_POST).  PHP_EOL);
             //===================================================
-
-
-
+            
+            
             [$id_venta, $error] = $this->model->RegistrarVenta($_POST); // =====> Guarda y registra la venta  la venta
-
+            
+            fwrite($file, '['.date("Y-m-d H:i:s").'] ID_VENTA: '.json_encode($id_venta).  PHP_EOL);
+            fclose($file);
+            
             print_r(json_encode($id_venta));
-
+            
             if($id_venta=!0){ //======================> Verifica que id_venta no sea cero
                 if(Session::get('sunat') == 1){
                    if($_POST['tipo_doc'] <> 3){

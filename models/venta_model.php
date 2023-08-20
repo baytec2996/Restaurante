@@ -1060,7 +1060,8 @@ class Venta_Model extends Model
 
                     $file = fopen("tm_detalle_venta.txt", "a+");
 
-                    fwrite($file, '|------HORA---------------|----------DETALLE-----' . PHP_EOL);
+                    if($i ==1)
+                    fwrite($file, '|------HORA----------|----------DETALLE----------|' . PHP_EOL);
 
                     fwrite($file, '['.date("Y-m-d H:i:s").'] '.json_encode(array($id_venta, $a[$i-1], $b[$i-1], $c[$i-1])) . "==>".($i-1). PHP_EOL);
                     fclose($file);
@@ -1113,15 +1114,17 @@ class Venta_Model extends Model
 
             die($e->getMessage());
         } finally {
-            return $id_venta;
+
+            return [$id_venta, ''];
         }
+        
     }
 
     public function anular_pedido($data)
     {
         try {
             if ($data['tipo_pedido'] == 1) {
-
+                
                 $consulta = "call usp_restDesocuparMesa( :flag, :id_pedido);";
                 $arrayParam =  array(
                     ':flag' => 1,
