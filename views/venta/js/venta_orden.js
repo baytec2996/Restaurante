@@ -978,7 +978,8 @@ var add = function(id_areap,id_pres,nombre_prod,pres_prod,precio_prod,nombre_imp
                         presentacion: pres_prod,
                         cantidad: parseInt(1),
                         precio: parseFloat(precio_prod).toFixed(2),
-                        comentario: ""
+                        comentario: ""  
+                        //comentario: ""  
                     });
                     if($('#rol_usr').val() == 5){
                         $.toast({

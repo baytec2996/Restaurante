@@ -176,7 +176,7 @@ class Venta extends Controller {
             
             print_r(json_encode($id_venta));
             
-            if($id_venta=!0){ //======================> Verifica que id_venta no sea cero
+            if(intval($id_venta)>0){ //======================> Verifica que id_venta no sea cero
                 if(Session::get('sunat') == 1){
                    if($_POST['tipo_doc'] <> 3){
                         require_once 'api_fact/controller/api.php';

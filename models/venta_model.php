@@ -972,6 +972,7 @@ class Venta_Model extends Model
             }
 
             $descuento_personal_ = 0;
+
             if ($data['descuento_personal'] > 0) {
                 $descuento_personal_ = $data['descuento_personal'];
             }
@@ -1028,61 +1029,71 @@ class Venta_Model extends Model
 
 
 
-             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $id_venta = $row['id_venta'];
-            } 
+            }
 
 
             $stmt->closeCursor();
 
-           // $this->db = new Database(DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_CHARSET);
+            // $this->db = new Database(DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_CHARSET);
             $a = $data['idProd'];
             $b = $data['cantProd'];
             $c = $data['precProd'];
 
-            // unset($a);
+            [$e, $d, $f] = [[], [], []];
 
-           //for ($x = 0; $x < count($a); $x++) { 
-             //   if (intval($b[$x]) > 0) {
-                    $values = '';
-                    for ($j=0; $j < count($a); $j++) {
-                        $values.='(?,?,?,?)'.(($j==count($a)-1)?'':',');
-                    }
+            for ($i=0; $i < count($b); $i++) {
+                if(intval($b[$i]) > 0){
+                    array_push($e, $a[$i]); // idProd
+                    array_push($d, $b[$i]); // cantProd
+                    array_push($f, $c[$i]); // precProd
+                }
+            }
+        
 
-                    $sql = "INSERT INTO tm_detalle_venta (id_venta,id_prod,cantidad,precio) VALUES ".$values;
-                    $st = $db->prepare($sql);
+            $values = '';
 
-                    for ($i=1; $i <= count($a); $i++) {
-                        $st->bindParam($i + 3*($i-1),$id_venta);
-                        $st->bindParam($i+1+3*($i-1),$a[$i-1]);
-                        $st->bindParam($i+2+3*($i-1),$b[$i-1]);
-                        $st->bindParam($i+3+3*($i-1),$c[$i-1]);
+            for ($j = 0; $j < count($d); $j++) {
+                    $values .= '(?,?,?,?)' . (($j == count($d) - 1) ? '' : ',');
+            }
+
+            $sql = "INSERT INTO tm_detalle_venta (id_venta,id_prod,cantidad,precio) VALUES " . $values;
+            $st = $db->prepare($sql);
+
+            for ($i = 1; $i <= count($e); $i++) {
+        
+                    $st->bindParam($i + 3 * ($i - 1), $id_venta);
+                    $st->bindParam($i + 1 + 3 * ($i - 1), $e[$i - 1]);
+                    $st->bindParam($i + 2 + 3 * ($i - 1), $d[$i - 1]);
+                    $st->bindParam($i + 3 + 3 * ($i - 1), $f[$i - 1]);
 
                     $file = fopen("tm_detalle_venta.txt", "a+");
 
-                    if($i ==1)
-                    fwrite($file, '|------HORA----------|----------DETALLE----------|' . PHP_EOL);
+                    if ($i == 1)
+                        fwrite($file, '|------HORA----------|----------DETALLE----------|' . PHP_EOL);
 
-                    fwrite($file, '['.date("Y-m-d H:i:s").'] '.json_encode(array($id_venta, $a[$i-1], $b[$i-1], $c[$i-1])) . "==>".($i-1). PHP_EOL);
+                    fwrite($file, '[' . date("Y-m-d H:i:s") . '] ' . json_encode(array($id_venta, $e[$i - 1], $d[$i - 1], $f[$i - 1])) . "==>" . ($i - 1) . PHP_EOL);
                     fclose($file);
-                    }
-                    $st->execute();
+                
+            }
+            $st->execute();
 
-                    //$st->execute(array($id_venta,$a[$x],$b[$x],$c[$x]));
-                    //$this->db->prepare($sql)->execute([$id_venta, $a[$x], $b[$x], $c[$x]]);
-                    
+            //$st->execute(array($id_venta,$a[$x],$b[$x],$c[$x]));
+            //$this->db->prepare($sql)->execute([$id_venta, $a[$x], $b[$x], $c[$x]]);
 
-                  /*   $file = fopen("tm_detalle_venta.txt", "a+");
+
+            /*   $file = fopen("tm_detalle_venta.txt", "a+");
 
                     fwrite($file, '|------HORA---------------|----------DETALLE-----' . PHP_EOL);
 
                     fwrite($file, '['.date("Y-m-d H:i:s").'] '.json_encode(array($id_venta, $a[$x], $b[$x], $c[$x])) . "==> $x" . PHP_EOL);
                     fclose($file); */
-             //   }
+            //   }
             //}
 
             // $this->db = new Database(DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS, DB_CHARSET);
-            $cons= "call usp_restEmitirVentaDet( :flag, :id_venta, :id_pedido, :fecha );";
+            $cons = "call usp_restEmitirVentaDet( :flag, :id_venta, :id_pedido, :fecha );";
             $arrayParam = array(
                 ':flag' => 1,
                 ':id_venta' =>  $id_venta,
@@ -1092,39 +1103,37 @@ class Venta_Model extends Model
             $stmt1 = $db->prepare($cons);
             $stmt1->execute($arrayParam);
             $db->commit();
-
         } catch (Exception $e) {
-            
+
             $file = fopen("tm_detalle_venta.txt", "a+");
 
-            fwrite($file, 'ERROR ['.date("Y-m-d H:i:s").'] '.$e->getMessage(). PHP_EOL);
+            fwrite($file, 'ERROR [' . date("Y-m-d H:i:s") . '] ' . $e->getMessage() . PHP_EOL);
             fclose($file);
 
-           $db->rollback();
+            $db->rollback();
 
-           $id_venta = [0,$e->getMessage()];
+            $id_venta = [0, $e->getMessage()];
 
-/* 
+            /* 
             $file = fopen("registrandoVentaTRYCATCH.txt", "w");
 
             fwrite($file, "entro en registrandoVentaTRYCATCH( " . PHP_EOL);
 
             fwrite($file, json_encode(array($arrayParam)) . "aca sql->" . PHP_EOL); */
-           
+
 
             die($e->getMessage());
         } finally {
 
             return [$id_venta, ''];
         }
-        
     }
 
     public function anular_pedido($data)
     {
         try {
             if ($data['tipo_pedido'] == 1) {
-                
+
                 $consulta = "call usp_restDesocuparMesa( :flag, :id_pedido);";
                 $arrayParam =  array(
                     ':flag' => 1,

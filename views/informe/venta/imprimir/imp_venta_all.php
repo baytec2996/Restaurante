@@ -43,7 +43,7 @@ $pdf->SetFont('Helvetica','',7);
 $pdf->Cell(0,4,'',0,1,'C');
 $pdf->SetFont('Helvetica','',12);
 $pdf->Cell(0,4,utf8_decode($this->empresa['nombre_comercial']),0,1,'C');
-$pdf->Cell(72,4,utf8_decode($url_logo),0,1,'C');
+//$pdf->Cell(72,4,utf8_decode($url_logo),0,1,'C');
 $pdf->SetFont('Helvetica','',9);
 $pdf->Cell(0,4,utf8_decode(Session::get('tribAcr')).':'.utf8_decode($this->empresa['ruc']),0,4,'C');
 $pdf->MultiCell(0,4,utf8_decode($this->empresa['direccion_comercial']),0,'C');
