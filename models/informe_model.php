@@ -20,6 +20,14 @@ class Informe_Model extends Model
         }
     }
 
+    public function Mesa(){
+        try {
+            return $this->db->selectAll('SELECT * FROM tm_mesa');
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
     public function Caja()
     {
         try
@@ -431,6 +439,67 @@ class Informe_Model extends Model
             die($e->getMessage());
         }
     }
+
+    public function venta_por_mesa_list($data)
+    {
+        try
+        {
+            $ifecha = date('Y-m-d',strtotime($data['ifecha']));
+            $ffecha = date('Y-m-d',strtotime($data['ffecha']));
+            $stm = $this->db->prepare("SELECT  dtp.categoria,dtp.prod_nom,dm.pres,dm.precio,dm.cant,dm.mesa, dm.fecha FROM (SELECT  p.id_prod 
+                                     AS 'id_prod',tdm.id_prod AS 'id_pres', p.presentacion AS 'pres', tdm.precio AS 'precio', tdm.cantidad AS 'cant', 
+                                      tdm.id_mesa AS 'mesa', DATE_FORMAT(DATE(tdm.fecha_venta),'%d/%m/%Y') AS 'fecha' FROM (SELECT tdv.id_venta, tdv.id_pedido,
+                                       tdv.id_prod, tdv.precio,m.id_mesa,tdv.cantidad, tdv.fecha_venta  FROM (SELECT v.id_venta,v.id_pedido, dv.id_prod, 
+                                       dv.precio, dv.cantidad, v.fecha_venta FROM tm_detalle_venta dv, tm_venta v WHERE  v.id_venta = dv.id_venta 
+                                       AND v.estado='a') tdv, tm_pedido_mesa m WHERE tdv.id_pedido = m.id_pedido) tdm , tm_producto_pres p
+                                        WHERE (DATE(tdm.fecha_venta)>= ? AND DATE(tdm.fecha_venta) <= ? )  
+                                        AND tdm.id_prod = p.id_pres AND  tdm.cantidad!=0 AND tdm.id_mesa like ?) dm ,
+                                         (SELECT p.id_prod AS 'id_prod', c.descripcion AS 'categoria',p.nombre AS
+                                          'prod_nom' FROM tm_producto p INNER JOIN tm_producto_catg c ON c.id_catg = p.id_catg )
+                                           dtp WHERE  dm.id_prod = dtp.id_prod ORDER BY 7");
+            /*
+            $stm = $this->db->prepare("SELECT dp.id_prod,SUM(dp.cantidad) AS cantidad,dp.precio,IFNULL((SUM(dp.cantidad)*dp.precio),0) AS total,v.fecha_venta FROM tm_detalle_venta AS dp INNER JOIN tm_venta AS v ON dp.id_venta = v.id_venta INNER JOIN v_productos AS vp ON vp.id_pres = dp.id_prod WHERE (DATE(v.fecha_venta) >= ? AND DATE(v.fecha_venta) <= ?) AND vp.id_catg like ? AND vp.id_prod like ? AND vp.id_pres like ? AND v.estado = 'a' GROUP BY dp.id_prod, dp.precio , DATE(v.fecha_venta) ORDER BY v.fecha_venta DESC, SUM(dp.cantidad) DESC");
+            */
+
+            // $stm->execute(array($ifecha,$ffecha,$data['id_catg'],$data['id_prod'],$data['id_pres']));
+            $stm->execute(array($ifecha,$ffecha,$data['id_mesa']));
+            $c = $stm->fetchAll(PDO::FETCH_OBJ);
+            /* foreach($c as $k => $d)
+            {
+                $c[$k]->{'Producto'} = $this->db->query("SELECT pro_nom,pro_pre,pro_cat FROM v_productos WHERE id_pres = ".$d->id_prod)
+                    ->fetch(PDO::FETCH_OBJ);
+            } */
+
+            $data = array("data" => $c);
+            $json = json_encode($data);
+            echo $json;
+        }
+        catch(Exception $e)
+        {
+            die($e->getMessage());
+        }
+
+    }
+
+    public function venMesa()
+    {
+        
+    }
+
+//============= Select Mesa =================
+
+    public function combMesa($data){
+        try {
+            $stm = $this->db->prepare("SELECT * FROM tm_mesa WHERE id_mesa = ?");
+            $stm->execute(array($data['cod']));
+            $c = $stm->fetchAll(PDO::FETCH_OBJ);
+            return $c;
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+//============= Select Mesa =================
+
     public function combPre($data)
     {
         try

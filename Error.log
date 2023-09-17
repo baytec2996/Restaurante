@@ -71,3 +71,36 @@
 |------HORA---------------|----------DETALLE-----
 [2023-08-22 00:08:31] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"2","id_pedido":"4089","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"70.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"70","idProd":["1","3","93"],"cantProd":["1","1","0"],"precProd":["45.00","25.00","25.00"]}
 [2023-08-21 19:08:31] ID_VENTA: "4265"
+|------HORA---------------|----------DETALLE-----
+[2023-08-31 22:03:31] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4095","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"75.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"75.00","idProd":["1","55","93"],"cantProd":["1","1","1"],"precProd":["45.00","5.00","25.00"]}
+[2023-08-31 17:03:31] ID_VENTA: "4266"
+|------HORA---------------|----------DETALLE-----
+[2023-09-01 22:37:25] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4096","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"10.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"10.00","idProd":["113"],"cantProd":["1"],"precProd":["10.00"]}
+[2023-09-01 17:37:25] ID_VENTA: "4267"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 04:37:16] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4097","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"5.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"5.00","idProd":["70"],"cantProd":["1"],"precProd":["5.00"]}
+[2023-09-01 23:37:16] ID_VENTA: "4268"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 17:52:40] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4099","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"15.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"15.00","idProd":["70"],"cantProd":["3"],"precProd":["5.00"]}
+[2023-09-02 12:52:40] ID_VENTA: "4269"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 18:32:58] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4100","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"515.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"515.00","idProd":["70"],"cantProd":["103"],"precProd":["5.00"]}
+[2023-09-02 13:32:58] ID_VENTA: "4270"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 20:24:30] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4101","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"5.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"5.00","idProd":["70"],"cantProd":["1"],"precProd":["5.00"]}
+[2023-09-02 15:24:30] ID_VENTA: "4271"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 20:35:10] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4102","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"15.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"15.00","idProd":["55"],"cantProd":["3"],"precProd":["5.00"]}
+[2023-09-02 15:35:10] ID_VENTA: "4272"
+|------HORA---------------|----------DETALLE-----
+[2023-09-02 20:36:25] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4103","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"15.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"15.00","idProd":["55"],"cantProd":["3"],"precProd":["5.00"]}
+[2023-09-02 15:36:25] ID_VENTA: "4273"
+|------HORA---------------|----------DETALLE-----
+[2023-09-15 00:16:38] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4104","cliente_id":"1","tipo_doc":"1","tipo_pago":"5","pago_efe":"0.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"454545","total":"8.00","idProd":["51"],"cantProd":["1"],"precProd":["8.00"]}
+[2023-09-14 19:16:39] ID_VENTA: "4274"
+|------HORA---------------|----------DETALLE-----
+[2023-09-15 00:17:39] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4105","cliente_id":"1","tipo_doc":"1","tipo_pago":"5","pago_efe":"0.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"123456","total":"8.00","idProd":["51"],"cantProd":["1"],"precProd":["8.00"]}
+[2023-09-14 19:17:39] ID_VENTA: "4275"
+|------HORA---------------|----------DETALLE-----
+[2023-09-17 04:04:12] {"tipo_pedido":"1","tipo_entrega":"0","dividir_cuenta":"1","id_pedido":"4106","cliente_id":"1","tipo_doc":"1","tipo_pago":"1","pago_efe":"431.00","pago_tar":"0.00","descuento_tipo":"2","descuento_personal":"","descuento_monto":"0.00","descuento_motivo":"","comision_tarjeta":"0.00","comision_delivery":"0.00","codigo_operacion":"","total":"431.00","idProd":["55","127"],"cantProd":["64","37"],"precProd":["5.00","3.00"]}
+[2023-09-16 23:04:12] ID_VENTA: "4276"

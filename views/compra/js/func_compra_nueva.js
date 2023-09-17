@@ -29,6 +29,7 @@ $(function() {
         dataType: 'JSON',
         delay: 1,
         source: function (request, response) {
+            console.log("Buscando... ");
             jQuery.ajax({
                 url: $('#url').val()+'compra/compra_insumo_buscar',
                 type: "post",
@@ -37,6 +38,7 @@ $(function() {
                     cadena: request.term
                 },
                 success: function (data) {
+                    console.log(data);
                     response($.map(data, function (item) {
                         return {
                             id_ins: item.id_ins,

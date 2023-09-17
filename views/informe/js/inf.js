@@ -13,6 +13,7 @@ $(".ventas").click(function() {
 				$('<div class="list-group"/>')
 				.append('<a class="list-group-item link font-14" href="informe/venta_all">Todas las ventas</a>')
 				.append('<a class="list-group-item link font-14" href="informe/venta_del">Ventas por delivery</a>')
+				.append('<a class="list-group-item link font-14" href="informe/venta_por_mesa">Ventas por mesa</a>')
 				.append('<a class="list-group-item link font-14" href="informe/venta_prod">Productos vendidos por canal de venta <span class="badge badge-danger">nuevo</span></a>')
 				.append('<a class="list-group-item link font-14" href="informe/venta_prod_kardex">Kardex de productos por ventas <span class="badge badge-danger">nuevo</span></a>')
 				// .append('<a class="list-group-item link font-14" href="informe/venta_prod_margen">Margen de ganancia por productos vendidos <span class="badge badge-danger">nuevo</span></a>')

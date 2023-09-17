@@ -763,7 +763,7 @@ var listarPedidos = function(){
 
 var pedido = {
     detalle: {
-        cod_ped:    0,
+        cod_ped: 0,
         items: []
     },
 
@@ -775,13 +775,21 @@ var pedido = {
         item.total = (item.cantidad * item.precio);
         this.detalle.items.forEach(function(x){
             if(x.producto_id === item.producto_id) {
-                x.cantidad += item.cantidad;
-                x.total += item.total;
+                if(x.stock != undefined){
+                    if(x.cantidad < x.stock){
+                    x.cantidad += item.cantidad;
+                    x.total += item.total;}
+                } else {
+                    x.cantidad += item.cantidad;
+                    x.total += item.total;
+                }
                 existe = true;
+                console.log('Son iguales =>',item.cantidad);
             }
         });
 
         if(!existe) {
+            console.log('No existe');
             this.detalle.items.push(item);
         }
 
@@ -791,22 +799,50 @@ var pedido = {
     /* Encargado de actualizar el precio/cantidad de un producto */
     actualizar: function(id, row)
     {
+        /* row.setAttribute('id', 'plugin');
+        console.log("======>" + $(row).attr('id')); */
         /* Capturamos la fila actual para buscar los controles por sus nombres */
         row = $(row).closest('.warning-element');
 
         /* Buscamos la columna que queremos actualizar */
         $(this.detalle.items).each(function(indice, fila){
-            if(indice == id)
+
+            if(pedido.detalle.items[indice].stock != undefined && indice == id){
+                
+
+                stock_nuevo = pedido.detalle.items[indice].stock;
+            }
+
+
+            if(indice == id && pedido.detalle.items[indice].stock != undefined )
             {
                 /* Agregamos un nuevo objeto para reemplazar al anterior */
                 pedido.detalle.items[indice] = {
-                    producto_id: row.find("input[name='producto_id']").val(),
+                    producto_id: parseInt(row.find("input[name='producto_id']").val()),
                     area_id: row.find("input[name='area_id']").val(),
                     nombre_imp: row.find("input[name='nombre_imp']").val(),
                     producto: row.find("span[name='producto']").text(),
                     presentacion: row.find("span[name='presentacion']").text(),
                     comentario: row.find("input[name='comentario']").val(),
-                    cantidad: row.find("input[name='cantidad']").val(),
+                    cantidad: parseInt(row.find("input[name='cantidad']").val()),
+                    precio: row.find("input[name='precio']").val(),
+                    stock: stock_nuevo,
+                };
+                pedido.detalle.items[indice].total = pedido.detalle.items[indice].precio * pedido.detalle.items[indice].cantidad;
+                return false;
+            }
+            console.log('id->',indice,id);
+            if(indice == id && pedido.detalle.items[indice].stock == undefined )
+            {console.log("xd");
+                /* Agregamos un nuevo objeto para reemplazar al anterior */
+                pedido.detalle.items[indice] = {
+                    producto_id: parseInt(row.find("input[name='producto_id']").val()),
+                    area_id: row.find("input[name='area_id']").val(),
+                    nombre_imp: row.find("input[name='nombre_imp']").val(),
+                    producto: row.find("span[name='producto']").text(),
+                    presentacion: row.find("span[name='presentacion']").text(),
+                    comentario: row.find("input[name='comentario']").val(),
+                    cantidad: parseInt(row.find("input[name='cantidad']").val()),
                     precio: row.find("input[name='precio']").val(),
                 };
                 pedido.detalle.items[indice].total = pedido.detalle.items[indice].precio * pedido.detalle.items[indice].cantidad;
@@ -851,12 +887,13 @@ var pedido = {
                 },
             success: function (datas) {
                 if(datas != 0){
+                    // var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
                     var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
                     if(Number(datas.ent) == (Number(datas.sal) + Number(pedido.detalle.items[indice].cantidad))){
                         console.log('1');
                         Swal.fire({   
                             title:'Advertencia',   
-                            html: 'Producto sin Stock, Comuniquese con el administrador',
+                            html: 'Producto sin Stock, Comuniquese con el administrador->',
                             icon: "warning", 
                             confirmButtonColor: "#34d16e",   
                             confirmButtonText: "Aceptar",
@@ -865,9 +902,15 @@ var pedido = {
                             showConfirmButton: true
                         }, function() {
                             return false
-                        });
+                        }); 
+
                     }
                     $('.stock_producto_'+indice).html('Queda: '+queda_stock);
+                    console.log(datas);
+                    console.log("datas.ent : "+ datas.ent);
+                    console.log("datas.sal : "+ datas.sal);
+                    console.log("pedido.detalle.items[indice].cantidad : "+pedido.detalle.items[indice].cantidad);
+                    console.log("stock: "+ queda_stock);
                 }else{
                     $('.stock_producto').html('');
                 }
@@ -891,7 +934,40 @@ var pedido = {
         }
         */
 
-        $(".touchspin1").TouchSpin({
+        for (i = 0; i < this.detalle.items.length; i++) {
+            if(this.detalle.items[i].stock ){
+                if( parseInt($("#ts".concat(i)).val()) <= this.detalle.items[i].stock){
+                    $("#ts".concat(i)).TouchSpin({
+                        verticalbuttons: true,
+                        buttondown_class: 'btn btn-warning',
+                        buttonup_class: 'btn btn-warning',
+                        min: 1,
+                        max: this.detalle.items[i].stock,
+                        step: 1,
+                        booster: false,
+                        stepintervaldelay: 99999999999
+                    });
+
+                }
+            }
+            
+            if(!this.detalle.items[i].stock){
+                $("#ts".concat(i)).TouchSpin({
+                    verticalbuttons: true,
+                    buttondown_class: 'btn btn-warning',
+                    buttonup_class: 'btn btn-warning',
+                    min: 1,
+                    max: 999,
+                    step: 1,
+                    booster: false,
+                    stepintervaldelay: 99999999999
+                });
+
+
+            }
+        } 
+
+       /*  $(".touchspin1").TouchSpin({
             verticalbuttons: true,
             buttondown_class: 'btn btn-warning',
             buttonup_class: 'btn btn-warning',
@@ -899,50 +975,102 @@ var pedido = {
             max: 999,
             step: 1,
             booster: false,
-            stepintervaldelay: 600000
-        });
+            stepintervaldelay: 99999999999
+        }); */
+
+
+        
+    },
+
+    dic : {},
+
+    update : function(){
+
+        delete this.dic;
+
+        this.dic = {};
+        
+        console.log('items =>',this.detalle.items);
+
+        for ( i = 0; i < this.detalle.items.length; i++) {
+            e = this.detalle.items[i].producto_id;
+            this.dic[parseInt(e)] = true;
+        }
+            /* this.detalle.items.forEach(function(e){this.dic[parseInt(e.producto_id)]=true;}); */
         
     }
 };
+
+
 var add = function(id_areap,id_pres,nombre_prod,pres_prod,precio_prod,nombre_imp){
-    var jqxhr = $.ajax({
-        type: 'POST',
-        url: $('#url').val()+'venta/ValidarEstadoPedido',
-        data: {
-            cod_ped : $('#codped').val()
-        }
-    })
-    .done(function(data) {
-        if(data == 1){
-            $.ajax({
-                url: $('#url').val()+'venta/control_stock_pedido',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    id_pres : id_pres,
-                },
-            success: function (datasss) {
-                console.log(datasss);
-                if(datasss != 0){
-                    console.log(Number(datasss.ent) +" "+Number(datasss.sal));
-                    // {"id_ins":"1","ent":"20","sal":"5","control":"1"}
-                    if((Number(datasss.ent)) == (Number(datasss.sal))){
-                        console.log(Number(datasss.ent)+" " +Number(datasss.sal));
-                        Swal.fire({   
-                            title:'Advertencia',   
-                            html: 'Producto sin Stock, Comuniquese con el administrador',
-                            icon: "warning", 
-                            confirmButtonColor: "#34d16e",   
-                            confirmButtonText: "Aceptar",
-                            allowOutsideClick: false,
-                            showCancelButton: false,
-                            showConfirmButton: true
-                        }, function() {
-                            return false
-                        });
 
+   // pedido.update();
+
+ //   if (!pedido.dic[parseInt(id_pres)]) {  INICIO DE IF
+        var jqxhr = $.ajax({
+            type: 'POST',
+            url: $('#url').val()+'venta/ValidarEstadoPedido',
+            data: {
+                cod_ped : $('#codped').val()
+            }
+        })
+        .done(function(data) {
+            if(data == 1){
+                $.ajax({
+                    url: $('#url').val()+'venta/control_stock_pedido',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id_pres : id_pres,
+                    },
+                success: function (datasss) {
+                    console.log('Datass => ',datasss);
+                    if(datasss != 0){
+                        console.log(Number(datasss.ent) +"<->"+Number(datasss.sal));
+                        // {"id_ins":"1","ent":"20","sal":"5","control":"1"}
+                        if((Number(datasss.ent)) == (Number(datasss.sal))){
+                            console.log(Number(datasss.ent)+" " +Number(datasss.sal));
+                            Swal.fire({   
+                                title:'Advertencia',   
+                                html: 'Producto sin Stock, Comuniquese con el administrador',
+                                icon: "warning", 
+                                confirmButtonColor: "#34d16e",   
+                                confirmButtonText: "Aceptar",
+                                allowOutsideClick: false,
+                                showCancelButton: false,
+                                showConfirmButton: true
+                            }, function() {
+                                return false
+                            });
+    
+                        }else{
+                            console.log("Registrar.....", parseInt(datasss.ent) - parseInt(datasss.sal));
+                            $("#nvo-ped").css('display','block');
+                            $(".bc").css('display','block');
+                            pedido.registrar({
+                                area_id: id_areap,
+                                nombre_imp: nombre_imp,
+                                producto_id: parseInt(id_pres),
+                                producto: nombre_prod,
+                                presentacion: pres_prod,
+                                cantidad: parseInt(1),
+                                precio: parseFloat(precio_prod).toFixed(2),
+                                comentario: "",
+                                stock: parseInt(datasss.ent) - parseInt(datasss.sal)
+                            });
+                            if($('#rol_usr').val() == 5){
+                                $.toast({
+                                    text: 'Pedido agregado a la lista',
+                                    position: 'bottom-left',
+                                    loaderBg:'#696969',
+                                    icon: 'success',
+                                    hideAfter: 3000, 
+                                    stack: 20
+                                });
+                            }
+                            $("#btn-confirmar").removeAttr('disabled');                       
+                        }                
                     }else{
-
                         $("#nvo-ped").css('display','block');
                         $(".bc").css('display','block');
                         pedido.registrar({
@@ -953,7 +1081,8 @@ var add = function(id_areap,id_pres,nombre_prod,pres_prod,precio_prod,nombre_imp
                             presentacion: pres_prod,
                             cantidad: parseInt(1),
                             precio: parseFloat(precio_prod).toFixed(2),
-                            comentario: "",
+                            comentario: ""  
+                            //comentario: ""  
                         });
                         if($('#rol_usr').val() == 5){
                             $.toast({
@@ -965,53 +1094,31 @@ var add = function(id_areap,id_pres,nombre_prod,pres_prod,precio_prod,nombre_imp
                                 stack: 20
                             });
                         }
-                        $("#btn-confirmar").removeAttr('disabled');                       
-                    }                
-                }else{
-                    $("#nvo-ped").css('display','block');
-                    $(".bc").css('display','block');
-                    pedido.registrar({
-                        area_id: id_areap,
-                        nombre_imp: nombre_imp,
-                        producto_id: parseInt(id_pres),
-                        producto: nombre_prod,
-                        presentacion: pres_prod,
-                        cantidad: parseInt(1),
-                        precio: parseFloat(precio_prod).toFixed(2),
-                        comentario: ""  
-                        //comentario: ""  
-                    });
-                    if($('#rol_usr').val() == 5){
-                        $.toast({
-                            text: 'Pedido agregado a la lista',
-                            position: 'bottom-left',
-                            loaderBg:'#696969',
-                            icon: 'success',
-                            hideAfter: 3000, 
-                            stack: 20
-                        });
+                        $("#btn-confirmar").removeAttr('disabled');
                     }
-                    $("#btn-confirmar").removeAttr('disabled');
-                }
-            }});
-        } else if (data == 2){
-            var html_confirm = '<div>Estas intentando agregar productos a una orden, que ya a sido facturada o cancelada anteriormente.</div>\
-            <br>\
-            <div><a href="'+$("#url").val()+'venta" class="btn btn-success">Continuar <i class="fas fa-arrow-alt-circle-right"></i></a>';
+                }});
+            } else if (data == 2){
+                var html_confirm = '<div>Estas intentando agregar productos a una orden, que ya a sido facturada o cancelada anteriormente.</div>\
+                <br>\
+                <div><a href="'+$("#url").val()+'venta" class="btn btn-success">Continuar <i class="fas fa-arrow-alt-circle-right"></i></a>';
+    
+                Swal.fire({
+                    title: 'Esta orden ya ha sido LIBERADA!',
+                    html: html_confirm,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    allowEscapeKey : false,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                });
+            }
+        });
+        
+  //  } 
+  // FIN DE IF
 
-            Swal.fire({
-                title: 'Esta orden ya ha sido LIBERADA!',
-                html: html_confirm,
-                icon: 'error',
-                allowOutsideClick: false,
-                allowEscapeKey : false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                closeOnConfirm: false,
-                closeOnCancel: false
-            });
-        }
-    });
 };
 
 $("#btn-confirmar").on("click", function(){

@@ -19,9 +19,14 @@ $(function() {
         okText: 'Aceptar'
     });
 
-    $('#start,#end,#filtro_presentacion').change( function() {
+$('#start,#end,#filtro_mesa').change( function() {
+        console.log('listar -> ');
         listar();
     });
+
+    /* $('#start,#end,#filtro_presentacion').change( function() {
+        listar();
+    }); */
 
      /* BOTON DATATABLES */
      var org_buildButton = $.fn.DataTable.Buttons.prototype._buildButton;
@@ -37,19 +42,87 @@ $(function() {
      // ================================================
 });
 
-$('#filtro_categoria').change( function() {
+/* $('#start').change( function() {
+    console.log('start');
+    listar();
+});
+
+$('#end').change( function() {
+    console.log('end');
+    listar();
+});
+ */
+
+$('#filtro_mesa').change( function() {
+    console.log('mesa');
+   // combMesa();
+   // listar();
+});
+
+/* $('#filtro_categoria').change( function() {
+    console.log('categoria');
     combPro();
     listar();
 });
-
+    
 $('#filtro_producto').change( function() {
+    console.log('producto');
     combPre();
     listar();
-});
+}); */
+
+var mesa = function () {
+    $.ajax({
+        type: "POST",
+        url: $('#url').val()+"informe/Mesa",
+        data: {
+            cod: 'mesa'
+        },
+        dataType: "json",
+        success: function(data){
+            
+            $('#filtro_mesa').append('<optgroup>');
+            $.each(data, function (index, value) {
+                $('#filtro_mesa').append("<option value='" + value.id_mesa + "'>" + value.id_mesa + "</option>").selectpicker('refresh');            
+            });
+            $('#filtro_mesa').append('</optgroup>');
+            $('#filtro_mesa').prop('disabled', false);
+            $('#filtro_mesa').selectpicker('refresh');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log(errorThrown + ' ' + textStatus);
+        } 
+    });
+}
 
 
+var combMesa = function () {
+    $('#filtro_mesa').find('option').remove();
+    $('#filtro_mesa').append("<option value='%' active>Mostrar todo</option>").selectpicker('refresh');
+    $.ajax({
+        type: "POST",
+        url: $('#url').val()+"informe/combMesa",
+        data: {
+            cod: $("#filtro_mesa").selectpicker('val')
+        },
+        dataType: "json",
+        success: function(data){
+            $('#filtro_mesa').append('<optgroup>');
+            $.each(data, function (index, value) {
+                $('#filtro_mesa').append("<option value='" + value.id_mesa + "'>" + value.id_mesa + "</option>").selectpicker('refresh');            
+            });
+            $('#filtro_mesa').append('</optgroup>');
+            $('#filtro_mesa').prop('disabled', false);
+            $('#filtro_mesa').selectpicker('refresh');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log(errorThrown + ' ' + textStatus);
+        } 
+    });
+    
+}
 
-var combPro = function(){
+/* var combPro = function(){
     $('#filtro_producto').find('option').remove();
     $('#filtro_producto').append("<option value='%' active>Mostrar todo</option>").selectpicker('refresh');
     $.ajax({
@@ -72,9 +145,9 @@ var combPro = function(){
             console.log(errorThrown + ' ' + textStatus);
         } 
     });
-}
+} */
 
-var combPre = function(){
+/* var combPre = function(){
     $('#filtro_presentacion').find('option').remove();
     $('#filtro_presentacion').append("<option value='%' active>Mostrar todo</option>").selectpicker('refresh');
     $.ajax({
@@ -97,16 +170,18 @@ var combPre = function(){
             console.log(errorThrown + ' ' + textStatus);
         } 
     });
-}
+} */
 
 var listar = function(){
 
     var moneda = $("#moneda").val();
 	ifecha = $("#start").val();
     ffecha = $("#end").val();
-    id_catg = $("#filtro_categoria").selectpicker('val');
+
+    id_mesa = $("#filtro_mesa").selectpicker('val');
+    /* id_catg = $("#filtro_categoria").selectpicker('val');
     id_prod = $("#filtro_producto").selectpicker('val');
-    id_pres = $("#filtro_presentacion").selectpicker('val');
+    id_pres = $("#filtro_presentacion").selectpicker('val'); */
 
 	var	table =	$('#table')
 	.DataTable({
@@ -122,13 +197,15 @@ var listar = function(){
 		"bSort": true,
 		"ajax":{
 			"method": "POST",
-			"url": $('#url').val()+"informe/venta_prod_list",
+			//"url": $('#url').val()+"informe/venta_prod_list",
+			"url": $('#url').val()+"informe/venta_por_mesa_list",
 			"data": {
                 ifecha: ifecha,
                 ffecha: ffecha,
-                id_catg: id_catg,
+                id_mesa: id_mesa,
+               /*  id_catg: id_catg,
                 id_prod: id_prod,
-                id_pres: id_pres
+                id_pres: id_pres */
             }
 		},
 		"columns":[
@@ -137,13 +214,14 @@ var listar = function(){
                 return '<i class="ti-calendar"></i> '+moment(data).format('DD-MM-Y');
             }},
             */
-			{"data":"Producto.pro_cat"},
-            {"data":"Producto.pro_nom"},
-            {"data":"Producto.pro_pre"},
-            {"data":"cantidad_salon"},
-            {"data":"cantidad_mostrador"},
-            {"data":"cantidad_delivery"},
-            {
+			{"data":"categoria"},
+            {"data":"prod_nom"},
+            {"data":"pres"},
+            {"data":"precio"},
+            {"data":"cant"},
+            {"data":"mesa"},
+            {"data":"fecha"},
+            /* {
                 "data": "cantidad_total",
                 "render": function ( data, type, row) {
                     return '<div class="text-right">'+data+'</div>';
@@ -160,7 +238,7 @@ var listar = function(){
                 "render": function ( data, type, row) {
                     return '<div class="text-right"> '+moneda+' '+formatNumber(data)+'</div>';
                 }
-            }
+            } */
 		],
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
@@ -172,15 +250,15 @@ var listar = function(){
                         i : 0;
             };
 
-            cantidad = api
-                .column( 6 /*, { search: 'applied', page: 'current'} */)
+            /* cantidad = api
+                .column( 6 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
  
             total = api
-                .column( 8 /*, { search: 'applied', page: 'current'} */)
+                .column( 8 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -189,10 +267,10 @@ var listar = function(){
             operaciones = api
                 .rows()
                 .data()
-                .count();
+                .count(); */
 
-            $('.productos-total').text(moneda+' '+formatNumber(total));
-            $('.productos-operaciones').text(cantidad);
+            /* $('.productos-total').text(moneda+' '+formatNumber(total));
+            $('.productos-operaciones').text(cantidad); */
         }
 	});
 }

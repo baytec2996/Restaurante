@@ -573,7 +573,7 @@ $codigo_anular_venta = Session::get('cod_seg');
             <input type="hidden" name="producto_id" value="{{:producto_id}}"/>
             <input type="hidden" name="area_id" value="{{:area_id}}"/>
             <input type="hidden" name="nombre_imp" value="{{:nombre_imp}}"/>
-            <input class="touchspin1 input-sm text-left" type="text" value="{{:cantidad}}" name="cantidad" onchange="pedido.actualizar({{:id}}, this);"/>
+            <input id="ts{{:id}}" class="touchspin1 input-sm text-left" type="text" value="{{:cantidad}}" name="cantidad" onchange="pedido.actualizar({{:id}}, this);"/>
         </td>
         <td class="p-l-0 p-r-0">
             <span name="producto">{{:producto}}</span><br><span name="presentacion" class="label label-warning text-uppercase">{{:presentacion}}</span> - <b><?php echo Session::get('moneda'); ?>

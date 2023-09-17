@@ -30,8 +30,9 @@ class Contable extends Controller {
 	{	
         header("Pragma: public");
         header("Expires: 0");
-        $filename = "Reporte_Formato_Ventas_".date("Ymdhis").".xls";
-        header("Content-type: application/vnd.ms-excel");
+        $filename = "Reporte_Formato_Ventas_".date("Y-m-d__h_i_s").".xls";
+        //header("Content-type: application/vnd.ms-excel");
+        header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header("Content-Disposition: attachment; filename=$filename");
         header("Pragma: no-cache");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -40,6 +41,7 @@ class Contable extends Controller {
         $this->view->periodo = date('Y-m',strtotime($_POST['start']));
         $this->view->render('contable/exportar/excel', true);
 	}
+
     function validador() 
 	{	
 		Auth::handleLogin();

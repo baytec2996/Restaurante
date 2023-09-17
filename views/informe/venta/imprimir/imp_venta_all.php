@@ -77,12 +77,14 @@ $pdf->MultiCell(72,4,'REFERENCIA: '.utf8_decode($this->dato->Cliente->referencia
  
 // COLUMNAS
 $pdf->SetFont('Helvetica', 'B', 9);
-$pdf->Cell(42, 10, 'PRODUCTO', 0);
+$pdf->Cell(47, 10, 'PRODUCTO', 0);
 $pdf->Cell(5, 10, 'CANT.',0,0,'R');
 $pdf->Cell(10, 10, 'P.U.',0,0,'R');
 $pdf->Cell(15, 10, 'IMP.',0,0,'R');
 $pdf->Ln(8);
-$pdf->Cell(72,0,'','T');
+
+// LINEA SEPARADORA 
+$pdf->Cell(78,0,'','T');
 $pdf->Ln(1);
  
 // PRODUCTOS
@@ -106,13 +108,13 @@ foreach($this->dato->Detalle as $d){
     }
 
 	$pdf->SetFont('Helvetica', '', 9);
-	$pdf->MultiCell(42,4,utf8_decode($d->nombre_producto),0,'L'); 
+	$pdf->MultiCell(47,4,utf8_decode($d->nombre_producto),0,'L'); 
 	// $pdf->MultiCell(42,4,utf8_decode($d->Producto->pro_nom).' '.utf8_decode($d->Producto->pro_pre),0,'L');
-	$pdf->Cell(47, -4, $d->cantidad,0,0,'R');
+	$pdf->Cell(50, -4, $d->cantidad,0,0,'R');
 	// $pdf->Cell(10, -4, $d->precio,0,0,'R');
 	// $pdf->Cell(15, -4, number_format(($d->cantidad * $d->precio),2),0,0,'R');
-	$pdf->Cell(10, -4, $d->precio_unitario,0,0,'R');
-	$pdf->Cell(15, -4, number_format(($d->cantidad * $d->precio_unitario),2),0,0,'R');
+	$pdf->Cell(13, -4, $d->precio_unitario,0,0,'R');
+	$pdf->Cell(14, -4, number_format(($d->cantidad * $d->precio_unitario),2),0,0,'R');
 	$pdf->Ln(1);
 }
  
@@ -120,7 +122,9 @@ foreach($this->dato->Detalle as $d){
 $sbt = (($this->dato->total + $this->dato->comis_tar + $this->dato->comis_del - $this->dato->desc_monto) / (1 + $this->dato->igv));
 $igv = ($sbt * $this->dato->igv);
 $pdf->SetFont('Helvetica', '', 9);
-$pdf->Cell(72,0,'','T');
+
+$pdf->Cell(78,0,'','T');
+
 $pdf->Ln(0);    
 $pdf->Cell(37, 10, 'SUB TOTAL', 0);    
 $pdf->Cell(20, 10, '', 0);

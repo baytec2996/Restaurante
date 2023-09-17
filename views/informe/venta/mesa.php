@@ -11,7 +11,7 @@ $fechaa = date("m-Y");
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?php echo URL; ?>informe" class="link">Inicio</a></li>
             <li class="breadcrumb-item"><a href="<?php echo URL; ?>informe" class="link">Informe de ventas</a></li>
-            <li class="breadcrumb-item active">Ventas por producto</li>
+            <li class="breadcrumb-item active">Ventas por mesa</li>
         </ol>
     </div>
 </div>
@@ -20,12 +20,11 @@ $fechaa = date("m-Y");
         <div class="card">
             <div class="card-body p-b-0">
                 <div class="message-box contact-box">
-                <!-- Boton Excel -->
+
                 <h2 class="add-ct-btn">
                     <span style="text-align:right;" id="btn-excel"></span>
                 </h2>
-                <!-- -->
-                
+
                     <br>
                     <div class="row floating-labels m-t-5">
                         <div class="col-lg-3">
@@ -38,20 +37,36 @@ $fechaa = date("m-Y");
                                 <label>Rango de fechas</label>
                             </div>
                         </div>
+
                         <div class="col-sm-5 col-lg-2">
                             <div class="form-group m-b-40">
-                                <select class="selectpicker form-control" name="filtro_categoria" id="filtro_categoria" data-style="form-control btn-default" data-live-search="true" autocomplete="off" data-size="5">
+                                <select class="selectpicker form-control" name="filtro_mesa" id="filtro_mesa" data-style="form-control btn-default" data-live-search="true" autocomplete="off" data-size="5">
                                     <option value="%" active>Mostrar Todo</option>
                                     <optgroup>
-                                        <?php foreach($this->Categoria as $key => $value): ?>
-                                            <option value="<?php echo $value['id_catg']; ?>"><?php echo $value['descripcion']; ?></option>
+                                        <?php foreach($this->Mesa as $key => $value): ?>
+                                            <option value="<?php echo $value['id_mesa']; ?>"><?php echo $value['nro_mesa']; ?></option>
                                         <?php endforeach; ?>
                                     </optgroup>
                                 </select>
                                 <span class="bar"></span>
-                                <label for="filtro_categoria">Categor&iacute;a</label>
+                                <label for="filtro_mesa">Mesa</label>
                             </div>
                         </div>
+                        
+                        <!-- <div class="col-sm-5 col-lg-2">
+                            <div class="form-group m-b-40">
+                                <select class="selectpicker form-control" name="filtro_categoria" id="filtro_categoria" data-style="form-control btn-default" data-live-search="true" autocomplete="off" data-size="5">
+                                    <option value="%" active>Mostrar Todo</option>
+                                    <optgroup>
+                                        <?php foreach($this->Mesa as $key => $value): ?>
+                                            <option value="<?php echo $value['id_mesa']; ?>"><?php echo $value['nro_mesa']; ?></option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                </select>
+                                <span class="bar"></span>
+                                <label for="filtro_categoria">Mesa</label>
+                            </div>
+                        </div> -->
                         <div class="col-sm-7 col-lg-4">
                             <div class="form-group m-b-40">
                                 <select class="selectpicker form-control" name="filtro_producto" id="filtro_producto" data-style="form-control btn-default" data-live-search="true" autocomplete="off" data-size="5" disabled>
@@ -100,15 +115,22 @@ $fechaa = date("m-Y");
                     <table id="table" class="table table-hover table-condensed stylish-table" width="100%">
                         <thead class="table-head">
                             <tr>
-                                <th width="10%">Categor&iacute;a</th>
+                                <!-- <th width="10%">Id venta</th> -->
+                                <th width="15%">Categoría</th>
+                                <th width="20%">Producto</th>
+                                <th width="25%">Presentacion</th>
+                                <th width="10%">Precio</th>
+                                <th width="10%">Cantidad </th>
+                                <th class="text-right" width="10%">Mesa</th>
+                                <th class="text-right" width="10%">Fecha</th>
+                                <!-- <th width="10%">Categor&iacute;a</th>
                                 <th width="15%">Producto</th>
                                 <th width="15%">Presentaci&oacute;n</th>
                                 <th width="10%">Cantidad por sal&oacute;n</th>
                                 <th width="10%">Cantidad por mostrador</th>
                                 <th width="10%">Cantidad por delivery</th>
                                 <th class="text-right" width="10%">Total cantidad vendida</th>
-                                <th class="text-right" width="10%">P.V.</th>
-                                <th class="text-right" width="10%">Total</th>
+                                <th class="text-right" width="10%">P.V.</th> -->
                             </tr>
                         </thead>
                         <tbody class="tb-st"></tbody>

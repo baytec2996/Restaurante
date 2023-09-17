@@ -14,15 +14,17 @@ $(function() {
     }).on('success.form.fv', function(e) {
 
         e.preventDefault();
-        var $form = $(e.target),
+        var $form = $(e.target);
         fv = $form.data('formValidation');
 
-        var ruc = $('#ruc').val(),
-			razon_social = $('#razon_social').val(),
-			direccion = $('#direccion').val(),
-			telefono = $('#telefono').val(),
-			email = $('#email').val(),
+        var ruc = $('#ruc').val();
+			razon_social = $('#razon_social').val();
+			direccion = $('#direccion').val();
+			telefono = $('#telefono').val();
+			email = $('#email').val();
 			contacto = $('#contacto').val();
+
+            console.log("HELLO");
 
 		$.ajax({
 			type: 'POST',
@@ -35,9 +37,17 @@ $(function() {
 				email : email,
 				contacto : contacto
 			},
+            
 			url: $('#url').val()+'compra/compra_proveedor_nuevo',
+
+            beforeSend: function(){
+                console.log(ruc+" "+razon_social);
+            },
+
 			success: function(data){
+                console.log(data);
 				if(data.cod == 1){
+                    console.log("Error");
 					Swal.fire({   
                         title:'Proceso No Culminado',   
                         text: 'Datos duplicados',
@@ -54,6 +64,7 @@ $(function() {
 					$('#id_prov').val(data.id_prov);
                     $('#datos_proveedor').val(razon_social);
                     $('#modal-proveedor').modal('hide');
+                    console.log("OPTION 2");
 				}
 			}
 		});
