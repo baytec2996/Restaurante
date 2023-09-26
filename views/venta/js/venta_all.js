@@ -274,9 +274,10 @@ var subPedido = function(cod,id_pedido,id_pres,precio){
 var anularPedido = function(id_pedido,id_pres,cant_ped,prod_nom,prod_pre,fecha_pedido,estado_pedido){
     $("#modal-sub-pedido").modal('hide');
     $('body').css('padding-right','0px'); 
-    var html_confirm = '<div>Se anulará el siguiente pedido:<br><label class="text-danger font-bold">'+cant_ped+' UNI</label> '+prod_nom+' <span class="label label-warning">'+prod_pre+'</span></label><br><br>Ingrese código de seguridad</div>\
+    var html_confirm = '<div>Se anulará el siguiente pedido:<br><label class="text-danger font-bold">'+cant_ped+' UNI</label> '+prod_nom+' <span class="label label-warning">'+prod_pre+'</span></label><br><br><div><span class="text-success" style="font-size: 17px;">¿Está Usted de Acuerdo?</span></div>';
+   /*  var html_confirm = '<div>Se anulará el siguiente pedido:<br><label class="text-danger font-bold">'+cant_ped+' UNI</label> '+prod_nom+' <span class="label label-warning">'+prod_pre+'</span></label><br><br>Ingrese código de seguridad</div>\
     <form><input class="form-control text-center w-50" type="password" id="codigo_seguridad" autocomplete="off"/></form><br>\
-    <div><span class="text-success" style="font-size: 17px;">¿Está Usted de Acuerdo?</span></div>';
+    <div><span class="text-success" style="font-size: 17px;">¿Está Usted de Acuerdo?</span></div>'; */
     Swal.fire({
         title: 'Necesitamos de tu Confirmación',
         html: html_confirm,
@@ -296,13 +297,12 @@ var anularPedido = function(id_pedido,id_pres,cant_ped,prod_nom,prod_pre,fecha_p
                         id_pres : id_pres,
                         fecha_pedido : fecha_pedido,
                         estado_pedido: estado_pedido,
-                        codigo_seguridad : $("#codigo_seguridad").val()
+                        codigo_seguridad : "123456"
                     },
                     dataType: 'json'
                 })
                 .done(function(item){
                     $.each(item['Codigo'], function(i, dato) {
-                        //aqui es codigo 1
                         if(dato.cod == 1){
                             $.each(item['Producto'], function(i, producto) {
                                 var nuevopedido = {
@@ -339,7 +339,6 @@ var anularPedido = function(id_pedido,id_pres,cant_ped,prod_nom,prod_pre,fecha_p
                                 confirmButtonColor: '#34d16e',
                                 confirmButtonText: "Aceptar"
                             });
-                            //aqui es codigo 2
                         } else if(dato.cod == 2) {
                             Swal.fire({
                                 title: 'Proceso No Culminado',

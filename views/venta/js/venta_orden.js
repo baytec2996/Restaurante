@@ -1,5 +1,8 @@
 var searchRequest = null;
 var moneda = $("#moneda").val();
+
+var temp = {}; // Guardar el listado de pedidos temporalmente
+
 $(function() {
     $('#restau').addClass("active");
     $('.btn-stock-pollo').show();
@@ -745,6 +748,9 @@ var listarPedidos = function(){
         success: function (data) {
             if (data.length != 0) {
                 $.each(data, function(i, item) {
+
+                    temp[item.id_pres] = parseInt(item.cantidad); // guardar cantidades de pedido en temp
+
                     var total = (item.cantidad * item.precio).toFixed(2);
                     $('#list-detped')
                         .append(
@@ -784,6 +790,7 @@ var pedido = {
                     x.total += item.total;
                 }
                 existe = true;
+                id = x.id; // guardar el id para actualizar solo el stock del producto ingresado
                 console.log('Son iguales =>',item.cantidad);
             }
         });
@@ -791,9 +798,10 @@ var pedido = {
         if(!existe) {
             console.log('No existe');
             this.detalle.items.push(item);
+            id = this.detalle.items.length - 1;
         }
 
-        this.refrescar();
+        this.refrescar(id);
     },
 
     /* Encargado de actualizar el precio/cantidad de un producto */
@@ -808,7 +816,6 @@ var pedido = {
         $(this.detalle.items).each(function(indice, fila){
 
             if(pedido.detalle.items[indice].stock != undefined && indice == id){
-                
 
                 stock_nuevo = pedido.detalle.items[indice].stock;
             }
@@ -850,7 +857,7 @@ var pedido = {
             }
         })
 
-        this.refrescar();
+        this.refrescar(id);
 
     },
 
@@ -866,11 +873,11 @@ var pedido = {
             }
         })
 
-        this.refrescar();
+        this.refrescar(id);
     },
 
     /* Refresca todo los productos elegidos */
-    refrescar: function()
+    refrescar: function(id)
     {
         this.detalle.total = 0;
 
@@ -878,43 +885,46 @@ var pedido = {
         $(this.detalle.items).each(function(indice, fila){
             pedido.detalle.items[indice].id = indice;
             pedido.detalle.total += fila.total;
-            $.ajax({
-                url: $('#url').val()+'venta/control_stock_pedido',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    id_pres : pedido.detalle.items[indice].producto_id,
-                },
-            success: function (datas) {
-                if(datas != 0){
-                    // var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
-                    var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
-                    if(Number(datas.ent) == (Number(datas.sal) + Number(pedido.detalle.items[indice].cantidad))){
-                        console.log('1');
-                        Swal.fire({   
-                            title:'Advertencia',   
-                            html: 'Producto sin Stock, Comuniquese con el administrador->',
-                            icon: "warning", 
-                            confirmButtonColor: "#34d16e",   
-                            confirmButtonText: "Aceptar",
-                            allowOutsideClick: false,
-                            showCancelButton: false,
-                            showConfirmButton: true
-                        }, function() {
-                            return false
-                        }); 
 
+            if(indice == id){
+                $.ajax({
+                    url: $('#url').val()+'venta/control_stock_pedido',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        id_pres : pedido.detalle.items[indice].producto_id,
+                    },
+                success: function (datas) {
+                    if(datas != 0){
+                        // var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
+                        var queda_stock = ((Number(datas.ent) - Number(datas.sal) ) - Number(pedido.detalle.items[indice].cantidad));
+                        if(Number(datas.ent) == (Number(datas.sal) + Number(pedido.detalle.items[indice].cantidad))){
+                            console.log('1');
+                            Swal.fire({   
+                                title:'Advertencia',   
+                                html: 'Producto sin Stock, Comuniquese con el administrador->',
+                                icon: "warning",
+                                confirmButtonColor: "#34d16e",
+                                confirmButtonText: "Aceptar",
+                                allowOutsideClick: false,
+                                showCancelButton: false,
+                                showConfirmButton: true
+                            }, function() {
+                                return false
+                            }); 
+    
+                        }
+                        $('.stock_producto_'+indice).html('Queda: '+queda_stock);
+                        console.log(datas);
+                        console.log("datas.ent : "+ datas.ent);
+                        console.log("datas.sal : "+ datas.sal);
+                        console.log("pedido.detalle.items[indice].cantidad : "+pedido.detalle.items[indice].cantidad);
+                        console.log("stock: "+ queda_stock);
+                    }else{
+                        $('.stock_producto_' + indice).html('');
                     }
-                    $('.stock_producto_'+indice).html('Queda: '+queda_stock);
-                    console.log(datas);
-                    console.log("datas.ent : "+ datas.ent);
-                    console.log("datas.sal : "+ datas.sal);
-                    console.log("pedido.detalle.items[indice].cantidad : "+pedido.detalle.items[indice].cantidad);
-                    console.log("stock: "+ queda_stock);
-                }else{
-                    $('.stock_producto').html('');
-                }
-            }});
+                }});
+            }
         })
 
         /* Calculamos el subtotal e IGV */
@@ -937,16 +947,21 @@ var pedido = {
         for (i = 0; i < this.detalle.items.length; i++) {
             if(this.detalle.items[i].stock ){
                 if( parseInt($("#ts".concat(i)).val()) <= this.detalle.items[i].stock){
-                    $("#ts".concat(i)).TouchSpin({
-                        verticalbuttons: true,
-                        buttondown_class: 'btn btn-warning',
-                        buttonup_class: 'btn btn-warning',
-                        min: 1,
-                        max: this.detalle.items[i].stock,
-                        step: 1,
-                        booster: false,
-                        stepintervaldelay: 99999999999
-                    });
+
+                    var stock_ped = temp[this.detalle.items[i].producto_id];
+
+                    console.log("Pedido ---->>>>",stock_ped);
+
+                        $("#ts".concat(i)).TouchSpin({
+                            verticalbuttons: true,
+                            buttondown_class: 'btn btn-warning',
+                            buttonup_class: 'btn btn-warning',
+                            min: 1,
+                            max: this.detalle.items[i].stock,
+                            step: 1,
+                            booster: false,
+                            stepintervaldelay: 99999999999
+                        });
 
                 }
             }

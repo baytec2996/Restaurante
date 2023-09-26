@@ -97,7 +97,7 @@ $codigo_anular_venta = Session::get('cod_seg');
                                 <div class="display-6 text-white"><i class="far fa-money-bill-alt"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h4 class="text-white m-b-0 font-bold" style="line-height: 10px;"><span id="totalPagar"></span></h4>
-                                    <small class="text-white font-medium">COBRAR</small>
+                                    <small class="text-white font-medium">FINALIZAR VENTA</small>
                                 </div>
                             </div>
                         </div>

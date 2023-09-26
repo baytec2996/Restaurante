@@ -1186,7 +1186,6 @@ class Venta_Model extends Model
             $stm = $this->db->prepare("SELECT p.pro_nom AS producto, p.pro_pre AS presentacion, d.cant AS cantidad, d.precio, d.comentario, i.nombre AS nombre_imp FROM tm_detalle_pedido AS d INNER JOIN v_productos AS p ON d.id_pres = p.id_pres INNER JOIN tm_area_prod AS a ON a.id_areap = p.id_areap INNER JOIN tm_impresora AS i ON i.id_imp = a.id_imp WHERE d.id_pedido = ? AND d.id_pres = ? AND d.estado <> 'z' AND d.cant > 0 GROUP BY d.id_pres ORDER BY d.fecha_pedido DESC");
             $stm->execute(array($data['id_pedido'], $data['id_pres']));
             $data_producto = $stm->fetchAll(PDO::FETCH_OBJ);
-
             //Cancelar pedido
             date_default_timezone_set($_SESSION["zona_horaria"]);
             setlocale(LC_ALL, "es_ES@euro", "es_ES", "esp");
